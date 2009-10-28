@@ -1,0 +1,16 @@
+--- origsrc/pygobject-2.20.0/girepository/overrides/Gdk.py	2009-06-17 15:48:38.000000000 -0500
++++ src/pygobject-2.20.0/girepository/overrides/Gdk.py	2009-10-26 13:47:30.140220200 -0500
+@@ -1,4 +1,4 @@
+-from bank.module import DynamicModule
++from girepository.module import DynamicModule
+ 
+ class GdkModule(DynamicModule):
+     def created(self):
+--- origsrc/pygobject-2.20.0/girepository/overrides/Gtk.py	2009-06-17 15:48:38.000000000 -0500
++++ src/pygobject-2.20.0/girepository/overrides/Gtk.py	2009-10-26 13:47:46.160242300 -0500
+@@ -1,4 +1,4 @@
+-from bank.module import DynamicModule
++from girepository.module import DynamicModule
+ 
+ class GtkModule(DynamicModule):
+     def created(self):

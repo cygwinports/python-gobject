@@ -2,7 +2,8 @@ inherit pygtk
 
 DESCRIPTION="Python bindings for glib-2.0"
 
-PATCH_URI="2.18.0-gcc-libffi.patch"
+PATCH_URI="2.18.0-gcc-libffi.patch
+           2.20.0-pybank.patch"
 
 PKG_NAMES="${PN} ${PN}-devel python-pygtk"
 PKG_HINTS="setup devel version"
