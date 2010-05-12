@@ -6,25 +6,25 @@ it's already rather useful, and is usable to write moderately
 complex programs.
 
 Runtime requirements:
-  cygwin-1.7.0-62
-  libffi4-4.3.4-1
-  libgcc1-4.3.4-1
-  libgirepository1.0_0-0.6.5-2
-  libglib2.0_0-2.22.2-1
-  python-2.5.4-10
+  cygwin-1.7.5-3
+  libffi4-4.3.4-3
+  libgcc1-4.3.4-3
+  libgirepository1.0_0-0.6.7-1
+  libglib2.0_0-2.22.4-2
+  python-2.6.5-1
 
 Build requirements:
 (besides corresponding -devel packages)
-  autoconf2.5-2.63-10
-  automake1.10-1.10.2-10
-  binutils-2.19.51-1
-  cygport-0.9.10-1
+  autoconf2.5-2.65-1
+  automake1.10-1.10.3-1
+  binutils-2.20.51-1
+  cygport-0.9.83-1
   gawk-3.1.7-1
-  gcc4-core-4.3.4-1
-  libtool-2.2.7a-14
+  gcc4-core-4.3.4-3
+  libtool-2.2.7a-15
   make-3.81-2
   pkg-config-0.23b-10
-  sed-4.1.5-2
+  sed-4.2.1-1
 
 Canonical website:
   http://www.pygtk.org/
@@ -50,6 +50,9 @@ This will create:
 -------------------------------------------
 
 Port Notes:
+
+----- version 2.20.0-2 -----
+Rebuilt for python2.6.
 
 ----- version 2.20.0-1 -----
 Version bump for GNOME 2.28.
