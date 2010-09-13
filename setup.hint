@@ -1,5 +1,5 @@
 category: Python Gnome
-requires: libffi4 libgcc1 libgirepository1.0_0 libglib2.0_0 python python-pygtk
+requires: libcairo2 libffi4 libgirepository1.0_1 libglib2.0_0 python python-cairo python-pygtk
 sdesc: "Python GLib/GObject/GIO bindings (runtime)"
 ldesc: "This archive contains bindings for the GLib, GObject and GIO,
 to be used in Python. It is a fairly complete set of bindings,

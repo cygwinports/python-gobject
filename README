@@ -6,21 +6,22 @@ it's already rather useful, and is usable to write moderately
 complex programs.
 
 Runtime requirements:
-  cygwin-1.7.5-3
-  libffi4-4.3.4-3
-  libgcc1-4.3.4-3
-  libgirepository1.0_0-0.6.7-1
-  libglib2.0_0-2.22.4-2
-  python-2.6.5-1
+  cygwin-1.7.7-1
+  libcairo2-1.8.10-2
+  libffi4-4.5.1-1
+  libgirepository1.0_1-0.9.5-1
+  libglib2.0_0-2.24.1-1
+  python-2.6.5-2
+  python-cairo-1.8.10-1
 
 Build requirements:
 (besides corresponding -devel packages)
   autoconf2.5-2.65-1
-  automake1.10-1.10.3-1
-  binutils-2.20.51-1
-  cygport-0.9.83-1
+  automake1.11-1.11.1-1
+  binutils-2.21.51-2
+  cygport-0.10.0-1
   gawk-3.1.7-1
-  gcc4-core-4.3.4-3
+  gcc4-core-4.5.0-1
   libtool-2.2.7a-15
   make-3.81-2
   pkg-config-0.23b-10
@@ -35,21 +36,25 @@ Canonical download:
 -------------------------------------------
 
 Build instructions:
-  unpack python-gobject2.0-2.20.0-X-src.tar.bz2
+  unpack python-gobject2.0-2.21.5-X-src.tar.bz2
     if you use setup to install this src package, it will be
 	 unpacked under /usr/src automatically
   cd /usr/src
-  cygport ./python-gobject2.0-2.20.0-X.cygport all
+  cygport ./python-gobject2.0-2.21.5-X.cygport all
 
 This will create:
-  /usr/src/python-gobject2.0-2.20.0-X-src.tar.bz2
-  /usr/src/python-gobject2.0-2.20.0-X.tar.bz2
-  /usr/src/python-gobject2.0-devel-2.20.0-X.tar.bz2
-  /usr/src/python-pygtk-2.20.0-X.tar.bz2
+  /usr/src/python-gobject2.0-2.21.5-X-src.tar.bz2
+  /usr/src/python-gobject2.0-2.21.5-X.tar.bz2
+  /usr/src/python-gobject2.0-devel-2.21.5-X.tar.bz2
+  /usr/src/python-pygtk-2.21.5-X.tar.bz2
 
 -------------------------------------------
 
 Port Notes:
+
+----- version 2.21.5-1 -----
+Version bump.
+PyGI module is now provided by PyGObject.
 
 ----- version 2.20.0-2 -----
 Rebuilt for python2.6.
