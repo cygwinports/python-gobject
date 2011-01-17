@@ -1,0 +1,38 @@
+inherit python3 pygtk
+
+DESCRIPTION="Python bindings for glib-2.0"
+
+PATCH_URI="2.18.0-gcc-libffi.patch"
+
+PKG_NAMES="${PN} ${PN}-devel python-pygtk python3-gobject2.0 python3-pygtk"
+python_gobject2_0_CONTENTS="usr/*/*pyglib*python${PYTHON_VERSION}* ${PYTHON_SITELIB#/}/gtk-2.0/
+                            usr/share/doc/ usr/share/gtk-doc/"
+python_gobject2_0_devel_CONTENTS="usr/bin/pygobject-codegen-2.0
+                                  usr/include/ usr/lib/pkgconfig/
+                                  usr/share/pygobject/"
+python_pygtk_CONTENTS="${PYTHON_SITELIB#/}/pygtk.*"
+python3_gobject2_0_CONTENTS="usr/*/*pyglib*python${PYTHON3_VERSION}* ${PYTHON3_SITELIB#/}/gtk-2.0/"
+python3_pygtk_CONTENTS="${PYTHON3_SITELIB#/}/pygtk.*"
+
+DIFF_EXCLUDES="fixxref.py"
+
+src_compile() {
+	cd ${S}
+	ACLOCAL_FLAGS="-I m4"
+	cygautoreconf
+	mkdir -p ${B}/py2
+	cd ${B}/py2
+	cygconf --disable-static PYTHON=/usr/bin/python${PYTHON_VERSION}
+	cygmake LIBS="-no-undefined ${LIBPYTHON}"
+	mkdir -p ${B}/py3
+	cd ${B}/py3
+	cygconf --disable-static PYTHON=/usr/bin/python${PYTHON3_VERSION}
+	cygmake LIBS="-no-undefined ${LIBPYTHON3}"
+}
+
+src_install() {
+	cd ${B}/py3
+	cyginstall
+	cd ${B}/py2
+	cyginstall
+}

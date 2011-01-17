@@ -1,0 +1,8 @@
+category: Python Gnome
+requires: python3
+external-source: python-gobject2.0
+sdesc: "Py3K GTK runtime version selector"
+ldesc: "This archive contains bindings for the GLib, GObject and GIO,
+to be used in Python. It is a fairly complete set of bindings,
+it's already rather useful, and is usable to write moderately
+complex programs."
