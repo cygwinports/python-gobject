@@ -2,7 +2,8 @@ inherit pygtk
 
 DESCRIPTION="Python bindings for glib-2.0"
 
-PATCH_URI="2.18.0-gcc-libffi.patch"
+PATCH_URI="2.18.0-gcc-libffi.patch
+           2.28.4-bug647509.patch"
 
 PKG_NAMES="${PN} ${PN}-devel python-gi"
 python_gobject_CONTENTS="--exclude=gi usr/*/*pyglib*python${PYTHON_VERSION}* ${PYTHON_SITELIB#/}/

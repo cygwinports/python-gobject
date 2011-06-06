@@ -1,0 +1,99 @@
+--- origsrc/pygobject-2.28.4/gi/gimodule.c	2011-04-18 10:35:33.000000000 -0500
++++ src/pygobject-2.28.4/gi/gimodule.c	2011-06-06 12:25:45.323706000 -0500
+@@ -475,7 +475,7 @@ _wrap_pyg_variant_type_from_string (PyOb
+ 
+     py_type = _pygi_type_import_by_name ("GLib", "VariantType");
+ 
+-    py_variant = _pygi_struct_new ( (PyTypeObject *) py_type, type_string, FALSE);
++    py_variant = _pygi_boxed_new ( (PyTypeObject *) py_type, type_string, FALSE);
+ 
+     return py_variant;
+ }
+--- origsrc/pygobject-2.28.4/gi/module.py	2011-04-18 10:35:33.000000000 -0500
++++ src/pygobject-2.28.4/gi/module.py	2011-06-06 12:25:36.088489900 -0500
+@@ -150,7 +150,9 @@ class IntrospectionModule(object):
+             elif isinstance(info, (StructInfo, UnionInfo)):
+                 if g_type.is_a(gobject.TYPE_BOXED):
+                     bases = (Boxed,)
+-                elif g_type.is_a(gobject.TYPE_POINTER) or g_type == gobject.TYPE_NONE:
++                elif g_type.is_a(gobject.TYPE_POINTER) or \
++                     g_type == gobject.TYPE_NONE or \
++                     g_type.fundamental == g_type:
+                     bases = (Struct,)
+                 else:
+                     raise TypeError("unable to create a wrapper for %s.%s" % (info.get_namespace(), info.get_name()))
+--- origsrc/pygobject-2.28.4/gi/pygi-argument.c	2011-04-18 10:36:47.000000000 -0500
++++ src/pygobject-2.28.4/gi/pygi-argument.c	2011-06-06 12:28:58.857643400 -0500
+@@ -1084,15 +1084,15 @@ array_success:
+                         }
+ 
+                         arg.v_pointer = closure;
++                    } else if (g_struct_info_is_foreign (info)) {
++                        PyObject *result;
++                        result = pygi_struct_foreign_convert_to_g_argument (
++                                     object, type_info, transfer, &arg);
+                     } else if (g_type_is_a (type, G_TYPE_BOXED)) {
+                         arg.v_pointer = pyg_boxed_get (object, void);
+                         if (transfer == GI_TRANSFER_EVERYTHING) {
+                             arg.v_pointer = g_boxed_copy (type, arg.v_pointer);
+                         }
+-                    } else if ( (type == G_TYPE_NONE) && (g_struct_info_is_foreign (info))) {
+-                        PyObject *result;
+-                        result = pygi_struct_foreign_convert_to_g_argument (
+-                                     object, type_info, transfer, &arg);
+                     } else if (g_type_is_a (type, G_TYPE_POINTER) || type == G_TYPE_NONE) {
+                         g_warn_if_fail (!g_type_info_is_pointer (type_info) || transfer == GI_TRANSFER_NOTHING);
+                         arg.v_pointer = pyg_pointer_get (object, void);
+--- origsrc/pygobject-2.28.4/gi/pygi-invoke.c	2011-04-18 10:36:47.000000000 -0500
++++ src/pygobject-2.28.4/gi/pygi-invoke.c	2011-06-06 12:31:47.634337700 -0500
+@@ -378,9 +378,7 @@ _prepare_invocation_state (struct invoca
+                         /* if caller allocates only use one level of indirection */
+                         state->out_args[out_args_pos].v_pointer = NULL;
+                         state->args[i] = &state->out_args[out_args_pos];
+-                        if (g_type_is_a (g_registered_type_info_get_g_type (info), G_TYPE_BOXED)) {
+-                            state->args[i]->v_pointer = _pygi_boxed_alloc (info, NULL);
+-                        } else if (g_struct_info_is_foreign((GIStructInfo *) info) ) {
++                        if (g_struct_info_is_foreign((GIStructInfo *) info) ) {
+                             PyObject *foreign_struct =
+                                 pygi_struct_foreign_convert_from_g_argument(state->arg_type_infos[i], NULL);
+ 
+@@ -391,6 +389,8 @@ _prepare_invocation_state (struct invoca
+                                 state->args[i]);
+ 
+                             Py_DECREF(foreign_struct);
++                        } else if (g_type_is_a (g_registered_type_info_get_g_type (info), G_TYPE_BOXED)) {
++                            state->args[i]->v_pointer = _pygi_boxed_alloc (info, NULL);
+                         } else {
+                             gssize size = g_struct_info_get_size ( (GIStructInfo *) info);
+                             state->args[i]->v_pointer = g_malloc0 (size);
+@@ -457,6 +457,12 @@ _prepare_invocation_state (struct invoca
+                     if (g_type_is_a (type, G_TYPE_BOXED)) {
+                         g_assert (state->n_in_args > 0);
+                         state->in_args[0].v_pointer = pyg_boxed_get (py_arg, void);
++                    } else if (g_struct_info_is_foreign (container_info)) {
++                        PyObject *result;
++                        result = pygi_struct_foreign_convert_to_g_argument (
++                                     py_arg, container_info,
++                                     GI_TRANSFER_NOTHING,
++                                     &state->in_args[0]);
+                     } else if (g_type_is_a (type, G_TYPE_POINTER) || type == G_TYPE_NONE) {
+                         g_assert (state->n_in_args > 0);
+                         state->in_args[0].v_pointer = pyg_pointer_get (py_arg, void);
+@@ -688,13 +694,13 @@ _process_invocation_state (struct invoca
+ 
+                 type = g_registered_type_info_get_g_type ( (GIRegisteredTypeInfo *) info);
+ 
+-                if (g_type_is_a (type, G_TYPE_BOXED)) {
+-                    g_warn_if_fail (transfer == GI_TRANSFER_EVERYTHING);
+-                    state->return_value = _pygi_boxed_new (py_type, state->return_arg.v_pointer, transfer == GI_TRANSFER_EVERYTHING);
+-                } else if (type == G_TYPE_NONE && g_struct_info_is_foreign (info)) {
++                if (g_struct_info_is_foreign (info)) {
+                     state->return_value =
+                         pygi_struct_foreign_convert_from_g_argument (
+                             state->return_type_info, state->return_arg.v_pointer);
++                } else if (g_type_is_a (type, G_TYPE_BOXED)) {
++                    g_warn_if_fail (transfer == GI_TRANSFER_EVERYTHING);
++                    state->return_value = _pygi_boxed_new (py_type, state->return_arg.v_pointer, transfer == GI_TRANSFER_EVERYTHING);
+                 } else if (g_type_is_a (type, G_TYPE_POINTER) || type == G_TYPE_NONE) {
+                     if (transfer != GI_TRANSFER_NOTHING)
+                         g_warning ("Return argument in %s returns a struct "
