@@ -1,8 +1,0 @@
-category: Python Gnome
-requires: libcairo2 libgirepository1.0_1 libglib2.0_0 python python-cairo python-gobject
-external-source: python-gobject
-sdesc: "Python GObject Introspection bindings"
-ldesc: "This archive contains bindings for the GLib, GObject and GIO,
-to be used in Python. It is a fairly complete set of bindings,
-it's already rather useful, and is usable to write moderately
-complex programs."
