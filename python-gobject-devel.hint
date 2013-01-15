@@ -1,8 +1,0 @@
-category: Python Gnome
-requires: libglib2.0-devel python python-gobject
-external-source: python-gobject
-sdesc: "Python GLib/GObject/GIO bindings (development)"
-ldesc: "This archive contains bindings for the GLib, GObject and GIO,
-to be used in Python. It is a fairly complete set of bindings,
-it's already rather useful, and is usable to write moderately
-complex programs."
