@@ -2,7 +2,7 @@ inherit pygtk
 
 NAME="python-gobject"
 VERSION=2.28.6
-RELEASE=3
+RELEASE=4
 CATEGORY="Python"
 SUMMARY="Python GLib/GObject/GIO bindings"
 DESCRIPTION="This archive contains bindings for the GLib, GObject and GIO,
@@ -24,6 +24,4 @@ DIFF_EXCLUDES="fixxref.py"
 CYGCONF_ARGS="
 	--disable-introspection
 	PYTHON=/usr/bin/python${PYTHON_VERSION}
-	FFI_CFLAGS=-DHAVE_FFI_H
-	FFI_LIBS=-lffi
 "
